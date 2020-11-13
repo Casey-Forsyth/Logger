@@ -3,12 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser')
 
 
 var recorder = require('./recorder');
 
 var app = express();
-
+app.use(bodyParser.raw({ inflate: true, limit: '100kb', type: '*/*' }))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,7 +28,7 @@ app.get('/favicon.ico',function(req,res){
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var data = {
-    body: req.body,
+    body: req.body.toString(),
     method: req.method,
     headers: req.headers,
     cookies: req.cookies,
